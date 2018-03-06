@@ -120,7 +120,7 @@
                         </div>
                     </div>
                     <!---------------- EYES ---------------->
-                    <div class="animate1" :class="{'animate2': invoice.insurance.name, 'top--135': !newItem.model || !newItem.price}">
+                    <div class="animate1" :class="{'animate2': invoice.insurance.name && invoice.items.length > 0, 'top--135': !newItem.model || !newItem.price}">
                         <div class="form-group row">
                             <label for="">Left eye</label>
                             <div class="input-group form-group">
@@ -344,7 +344,6 @@
     </script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
-    
     
 </body>
 </html>
