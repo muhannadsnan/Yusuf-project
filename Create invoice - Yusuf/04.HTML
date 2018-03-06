@@ -19,11 +19,11 @@
     ._bold{font-weight: bolder;}
     .mt-5{margin-top: 50px;}
     .top--135{top: -135px !important;}
-    .input-group input[type="number"]{padding: 1px; text-align: center; }
-    .input-group span{padding: 5px; background-color: #f7f7f7;  }
-    .animate1{position: relative; top: -30px; opacity: .0; z-index: -999; height: 0px; }
+    .input-group input[type="number"]{padding: 1px; text-align: center;}
+    .input-group span{padding: 5px; background-color: #f7f7f7;}
+    .animate1{position: relative; top: -30px; opacity: 0; z-index: -999; height: 0px; }
     .animate11{position: relative; top: -70px; opacity: 0; z-index: -999; height: 0px; }
-    .animate2{position: relative; top: 0; opacity: 1; z-index: 1;  height: auto; 
+    .animate2{position: relative; top: 0; opacity: 1; z-index: 1; height: auto; 
         transition: opacity,top .6s;
         -webkit-transition: opacity,top .6s; 
         -moz-transition: opacity,top .6s; 
@@ -37,16 +37,16 @@
         -o-transition: opacity,top .5s; }
     [v-cloak] { display: none; }
     .animate-submitted0{position: relative; top: -1px; right: -1px;
-        -webkit-transition: all .5s ease, right 2s ease .5s, opacity .5s ease .5s, -webkit-transform 1s .5s;
         transition: all .5s ease, right 2s ease .5s, opacity .5s ease .5s, -webkit-transform 1s .5s;
+        -webkit-transition: all .5s ease, right 2s ease .5s, opacity .5s ease .5s, -webkit-transform 1s .5s;
     }
     .animate-submitted1{position: relative; top: -100px; width: 270px;
-        -webkit-transform: rotate(180deg); transform: rotate(180deg); opacity: 0; right: -1000px;}
+        transform: rotate(180deg); -webkit-transform: rotate(180deg); opacity: 0; right: -1000px;}
     /**
     li.fixtures:hover +  li.hidden{
         display: block;
     }*/
-    input[type='number'] {-moz-appearance:textfield;} input::-webkit-outer-spin-button,input::-webkit-inner-spin-button { -webkit-appearance: none;}
+    input[type='number']#client_phone{-moz-appearance:textfield;} #client_phone::-webkit-outer-spin-button,#client_phone::-webkit-inner-spin-button { -webkit-appearance: none; }
 </style>
 
 <body>
@@ -191,154 +191,156 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue-toastr-2/dist/vue-toastr-2.js"></script>
     <script>
-            class Invoice {
-                constructor(client, items, insurance, leftEye, rightEye, date, total){
-                    this.client = client || new Client()
-                    this.items = items || []
-                    this.insurance = insurance || new Insurance()
-                    this.leftEye = leftEye || new Eye(0, 0, 0, 0)
-                    this.rightEye = rightEye || new Eye(0, 0, 0, 0)
-                    this.date = date || 'N/A'
-                    this.total = total || 0
-                }
+        class Invoice {
+            constructor(client, items, insurance, leftEye, rightEye, date, total){
+                this.client = client || new Client()
+                this.items = items || []
+                this.insurance = insurance || new Insurance()
+                this.leftEye = leftEye || new Eye(0, 0, 0, 0)
+                this.rightEye = rightEye || new Eye(0, 0, 0, 0)
+                this.date = date || 'N/A'
+                this.total = total || 0
             }
-            class Item {
-                constructor(id, model, desc, price, quantity) {
-                    this.id = id
-                    this.model = model
-                    this.desc = desc
-                    this.price = price
-                    this.quantity = quantity || 1
-                }
+        }
+        class Item {
+            constructor(id, model, desc, price, quantity) {
+                this.id = id
+                this.model = model
+                this.desc = desc
+                this.price = price
+                this.quantity = quantity || 1
             }
-            class Client {
-                constructor(name, phone) {
-                    this.name = name
-                    this.phone = phone
-                }
+        }
+        class Client {
+            constructor(name, phone) {
+                this.name = name
+                this.phone = phone
             }
-            class Insurance {
-                constructor(id, name, discount) {
-                    this.id = id
-                    this.name = name
-                    this.discount = discount
-                }
+        }
+        class Insurance {
+            constructor(id, name, discount) {
+                this.id = id
+                this.name = name
+                this.discount = discount
             }
-            class Eye {
-                constructor(sphere, cylinder, axis, addition) {
-                    this.sphere = sphere
-                    this.cylinder = cylinder
-                    this.axis = axis
-                    this.addition = addition
-                }
+        }
+        class Eye {
+            constructor(sphere, cylinder, axis, addition) {
+                this.sphere = sphere
+                this.cylinder = cylinder
+                this.axis = axis
+                this.addition = addition
             }
-            /*var insurancesjs = @Html.Raw(Json.Encode(insurancesdb));
-            var insurances=[];
-            for (i = 0; i <insurancesjs.length; i++) {
-                insurances.push(new Insurance(insurancesjs[i].Id, insurancesjs[i].Description, insurancesjs[i].Discount));
-            }*/
-            var app = new Vue({
-                el: '#app',
-                created() {
-                    //this.apploaded = true
-                    //this.fetchInsurances()
+        }
+        /*var insurancesjs = @Html.Raw(Json.Encode(insurancesdb));
+        var insurances=[];
+        for (i = 0; i <insurancesjs.length; i++) {
+            insurances.push(new Insurance(insurancesjs[i].Id, insurancesjs[i].Description, insurancesjs[i].Discount));
+        }*/
+        var app = new Vue({
+            el: '#app',
+            created() {
+                //this.apploaded = true
+                //this.fetchInsurances()
+            },
+            data() {
+                return {
+                    title: 'Create invoice',
+                    newItem: new Item(),
+                    //insurances:insurances,
+                    insurances: [ // this array has to be loaded from api when the page starts.
+                        new Insurance(1, 'half price', 50),
+                        new Insurance(2, 'ten percent', 10)
+                    ],
+                    invoice: new Invoice(),
+                    totalPrice: 0,
+                    showDiscount: false,
+                    loading: false,
+                    loadingSubmit: false,
+                    submitted: false
+                }
+            },
+            methods: {
+                addProd(){
+                    this.invoice.items.unshift(this.newItem)
+                    this.totalPrice += this.newItem.price * this.newItem.quantity
+                    this.newItem = new Item()
+                    console.log(this.newItem)
                 },
-                data() {
-                    return {
-                        title: 'Create invoice',
-                        newItem: new Item(),
-                        //insurances:insurances,
-                        insurances: [ // this array has to be loaded from api when the page starts.
-                            new Insurance(1, 'half price', 50),
-                            new Insurance(2, 'ten percent', 10)
-                        ],
-                        invoice: new Invoice(),
-                        totalPrice: 0,
-                        showDiscount: false,
-                        loading: false,
-                        loadingSubmit: false,
-                        submitted: false
-                    }
-                },
-                methods: {
-                    addProd(){
-                        this.invoice.items.unshift(this.newItem)
-                        this.totalPrice += this.newItem.price * this.newItem.quantity
-                        this.newItem = new Item()
-                        console.log(this.newItem)
-                    },
-                    requestItemByModel(){
-                        this.loading = true
-                        //axios.post('@Url.Action("GetItemByModel", "Invoices")', { "model": this.newItem.model })
-                        axios.post('https://jsonplaceholder.typicode.com/posts',  this.newItem.model)
-                            .then((response) => {
-                                console.log(response.data)
-                                response = {data: {Id: 1001, BrandName: 'Fetched item', Price: 899}}
-                                this.newItem.id = response.data.Id
-                                this.newItem.title = response.data.BrandName
-                                this.newItem.price = response.data.Price
-                                this.$toastr.success('Item found + item title');
-                                this.loading = false
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                                this.$toastr.error('Please try again later.', 'Error reaching the item!');
-                                this.loading = false
-                            })
-                    },
-                    onSubmit(){
-                        this.invoice.total = this.totalPrice
-                        this.loadingSubmit = true
-                        //axios.post('@Url.Action("CreateInvoice", "Invoices")', { "invoicejs": JSON.stringify(this.invoice)})
-                        axios.post('https://jsonplaceholder.typicode.com/posts', this.invoice)
-                            .then((response) => {
-                                console.log(response.data)
-                                this.invoice = new Invoice()
-                                this.totalPrice = 0
-                                this.$toastr.success('Invoice was successfully created!');
-                                this.loadingSubmit = false
-                                this.submitted = true
-                            })
-                            .catch((error) => {
-                                this.$toastr.error('Please try again later.', 'Error while creating the invoice!');
-                                this.loadingSubmit = false
-                            })
-                    },
-                    fetchInsurances(){
-                        axios.post('https://jsonplaceholder.typicode.com/posts', this.invoice)
-                            .then((response) => {
+                requestItemByModel(){
+                    this.loading = true
+                    //axios.post('@Url.Action("GetItemByModel", "Invoices")', { "model": this.newItem.model })
+                    axios.post('https://jsonplaceholder.typicode.com/posts',  this.newItem.model)
+                        .then((response) => {
                             console.log(response.data)
-                            this.insurances = response.data
-                            //this.$toastr.success('insurances were fetched successfully!');
+                            response = {data: {Id: 1001, BrandName: 'Fetched item', Price: 899}}
+                            this.newItem.id = response.data.Id
+                            this.newItem.title = response.data.BrandName
+                            this.newItem.price = response.data.Price
+                            this.$toastr.success('Item found + item title');
+                            this.loading = false
                         })
                         .catch((error) => {
-                                this.$toastr.error('Please try again later.', 'Error while fetching the insurances!');
+                            console.log(error)
+                            this.$toastr.error('Please try again later.', 'Error reaching the item!');
+                            this.loading = false
                         })
-                    },
-                    delItem(i){
-                        this.invoice.items.splice(i, 1)
-                    }
                 },
-                computed: {
-                    finalPrice(){
-                        var ins = this.invoice.insurance.discount
-                        console.log('insuranse: '+ins)
-                        if(ins <= 100 || ins >= 1)
-                            return this.totalPrice - this.totalPrice * this.invoice.insurance.discount / 100
-                        return this.totalPrice
-                    }
+                onSubmit(){
+                    this.invoice.total = this.totalPrice
+                    this.loadingSubmit = true
+                    //axios.post('@Url.Action("CreateInvoice", "Invoices")', { "invoicejs": JSON.stringify(this.invoice)})
+                    axios.post('https://jsonplaceholder.typicode.com/posts', this.invoice)
+                        .then((response) => {
+                            console.log(response.data)
+                            this.invoice = new Invoice()
+                            this.totalPrice = 0
+                            this.$toastr.success('Invoice was successfully created!');
+                            this.loadingSubmit = false
+                            this.submitted = true
+                        })
+                        .catch((error) => {
+                            this.$toastr.error('Please try again later.', 'Error while creating the invoice!');
+                            this.loadingSubmit = false
+                        })
                 },
-                watch: {
-                    invoice: {
-                        handler: function(inv) {
-                            if(inv.client.name){
-                                this.submitted = false
-                            }
-                        },
-                        deep: true
-                     }
+                fetchInsurances(){
+                    axios.post('https://jsonplaceholder.typicode.com/posts', this.invoice)
+                        .then((response) => {
+                        console.log(response.data)
+                        this.insurances = response.data
+                        //this.$toastr.success('insurances were fetched successfully!');
+                    })
+                    .catch((error) => {
+                            this.$toastr.error('Please try again later.', 'Error while fetching the insurances!');
+                    })
+                },
+                delItem(i){
+                    this.totalPrice -= this.invoice.items[i].price * this.invoice.items[i].quantity                  
+                    this.invoice.items.splice(i, 1)
                 }
-            })
+            },
+            computed: {
+                finalPrice(){
+                    var ins = this.invoice.insurance.discount
+                    console.log('insuranse: '+ins)
+                    if(ins <= 100 || ins >= 1)
+                        return this.totalPrice - this.totalPrice * this.invoice.insurance.discount / 100
+                    return this.totalPrice
+                }
+            },
+            watch: {
+                invoice: {
+                    handler: function(inv) {
+                        
+                        if(inv.client.name){
+                            this.submitted = false
+                        }
+                    },
+                    deep: true
+                    }
+            }
+        })
     </script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
