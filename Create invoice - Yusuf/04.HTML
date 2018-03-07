@@ -170,7 +170,7 @@
                                 <p><strong>Items:</strong></p>
                                 <ul v-for="(item, i) in invoice.items" class="text-left">
                                     <li>
-                                        <p><span>{{item.title}}  {{item.quantity}} x ({{item.price}}) = </span><strong>{{item.quantity * item.price}}</strong> <span class="del" @click="delItem(i)">X</span></p>
+                                        <p><span>{{item.title}}: {{item.quantity}} x ({{item.price}}) = </span><strong>{{item.quantity * item.price}}</strong> <span class="del" @click="delItem(i)"><i class="fas fa-trash-alt fa-2x"></i></span></p>
                                     </li>
                                 </ul>
                                 <hr>
@@ -277,7 +277,7 @@
                             this.newItem.id = response.data.Id
                             this.newItem.title = response.data.BrandName
                             this.newItem.price = response.data.Price
-                            this.$toastr.success('Item found + item title');
+                            this.$toastr.success('Item found: ' + this.newItem.title);
                             this.loading = false
                         })
                         .catch((error) => {
@@ -316,8 +316,10 @@
                     })
                 },
                 delItem(i){
-                    this.totalPrice -= this.invoice.items[i].price * this.invoice.items[i].quantity                  
-                    this.invoice.items.splice(i, 1)
+                    if(confirm('Want to delete?')){
+                        this.totalPrice -= this.invoice.items[i].price * this.invoice.items[i].quantity                  
+                        this.invoice.items.splice(i, 1)
+                    }                    
                 }
             },
             computed: {
