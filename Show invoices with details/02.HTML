@@ -11,31 +11,23 @@
 </head>
 <style>
     [v-cloak] { display: none; }
-    .result{border: 1px solid rgb(248, 233, 233); padding: 10px 10px; border-radius: 4px; transition: all .7s;}
-    .result:hover{border-color: #681f1f;}
+    .result{border: 1px solid #fff; padding: 10px 10px; border-radius: 4px; transition: all .7s;}
+    .result:hover{border-color: orangered;}
     h1, h2, h3{text-align: center;}
-    button.close span{font-size: 30pt; line-height: 28px; padding: 0;}
 </style>
 
 <body>
+
     <div id="app">
         <!--<div class="row">-->   <!--<ul>-->  <!--<li v-for="p in invoice.items">{{p}}</li>-->    <!--</ul>-->   <!--</div>-->     <!--<hr>-->
         <div class="container-fluid" v-cloak>
             <div class="row">
-                <ol class="breadcrumb col-md-10 col-md-offset-1">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Library</a></li>
-                    <li class="active">Data</li>
-                </ol>
-            </div>
-
-            <div class="row">           
                 <div class="col-md-8 col-md-offset-2 text-center">
                     <h1>{{title}} <i class="fas fa-file-alt"></i></h1>
                     <hr>
                 </div>
 
-                <div class="col-md-6 col-md-offset-3">
+                <div class="col-md-5 col-md-offset-2">
                    <div class="row">
                        <div class="form-group">
                             <input type="search" v-model="searchTxt" class="form-control" id="search" placeholder="Search invoices.." @keyup.enter="fetchInvoices()">
@@ -45,40 +37,32 @@
                        <h2 v-if="!searchTxt">Please type a keyword to search..</h2>
                        <h2 v-else-if="searchTxt && result.length == 0">No results found.</h2>                       
                        <div v-else>
-                            <div class="form-group result" v-for="res in result" @click="fetchDetails(res.id)" data-toggle="modal" data-target="#myModal">
+                            <div class="form-group result" v-for="res in result" @click="fetchDetails(res.id)">
                                 <strong>{{res.title}}:</strong>
                                 <p>{{res.body}}</p>
                             </div>
                        </div>                       
                    </div>
                 </div>
+
                 
-                <!--------------- Modal ---------------->
-                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content panel panel-primary">
-                            <div class="modal-header panel-heading">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                <h3 class="modal-title text-center" id="myModalLabel">{{selectedInvoice.title}}</h3>
+                <div class="col-md-5"> 
+                    <h1 v-show="loading"><i class="fas fa-spinner"></i></h1>
+                    <div v-show="!loading">
+                        <div class="panel panel-primary" v-if="selectedInvoice.title ">
+                            <div class="panel-heading">
+                                <strong class="panel-title">{{selectedInvoice.title}}</strong>
                             </div>
-                            <div class="modal-body"><!---- MODAL BODY ------>
-                                <h1 v-show="loading"><i class="fas fa-spinner"></i></h1>
-                                <div v-show="!loading">
-                                    <ul>
-                                        <li> <strong>Client: </strong> <span>Yusuf</span></li>
-                                        <li> <strong>phone: </strong> <span>789456789</span></li>
-                                        <li> <strong>desc: </strong> <span>{{selectedInvoice.body}}</span></li>
-                                    </ul>
-                                </div>
-                            </div><!-------- END: MODAL BODY ------------>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                            <div class="panel-body">
+                                <ul>
+                                    <li> <strong>Client: </strong> <span>Yusuf</span></li>
+                                    <li> <strong>phone: </strong> <span>789456789</span></li>
+                                    <li> <strong>desc: </strong> <span>{{selectedInvoice.body}}</span></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                </div>                  
+                </div>
             </div>
         </div>
     </div>
@@ -98,12 +82,15 @@
 
         var app = new Vue({
             el: '#app',
-
+            created() {
+                //this.apploaded = true
+                //this.fetchInsurances()
+            },
             data() {
                 return {
                     title: 'Show invoices',
                     loading: false,
-                    searchTxt: 'yoyo',
+                    searchTxt: '',
                     result: [],
                     selectedInvoice: {}
                 }
@@ -114,7 +101,7 @@
                     axios.get('https://jsonplaceholder.typicode.com/posts')
                     .then((response) => {
                             this.result = response.data
-                            //this.$toastr.success('Results are loaded successfully!');
+                            this.$toastr.success('Results are loaded successfully!');
                             this.loading = false
                         })
                         .catch((error) => {
@@ -137,10 +124,6 @@
                             this.loading = false
                         })
                 }
-            },
-            created() {
-                //this.apploaded = true
-                this.fetchInvoices()
             }
         })
     </script>
